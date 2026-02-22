@@ -160,6 +160,11 @@ pub unsafe fn create_index_buffer(
     Ok(())
 }
 
+pub unsafe fn create_descriptor_set_layout(
+    device: &Device,
+    data: &mut AppData,
+)
+
 unsafe fn create_buffer(
     instance: &Instance,
     device: &Device,

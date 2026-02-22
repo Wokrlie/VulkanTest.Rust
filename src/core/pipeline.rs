@@ -31,8 +31,8 @@ pub unsafe fn create_pipeline(device: &Device, data: &mut AppData) -> Result<()>
         .module(frag_shader_module)
         .name(b"main\0");
 
-    let binding_descriptions = &[core::vertex::Vertex::binding_descriptions()];
-    let attribute_descriptions = core::vertex::Vertex::attribute_descriptions();
+    let binding_descriptions = &[core::buffer::Vertex::binding_descriptions()];
+    let attribute_descriptions = core::buffer::Vertex::attribute_descriptions();
     let vertex_input_state = vk::PipelineVertexInputStateCreateInfo::builder()
         .vertex_binding_descriptions(binding_descriptions)
         .vertex_attribute_descriptions(&attribute_descriptions);

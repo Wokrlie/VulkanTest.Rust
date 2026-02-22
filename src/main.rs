@@ -140,13 +140,16 @@ impl App {
         core::swapchain::create_swapchain_image_views(&device, &mut data)?;
 
         core::pipeline::create_render_pass(&instance, &device, &mut data)?;
+        core::buffer::create_descriptor_set_layout(&device, &mut data)?;
         core::pipeline::create_pipeline(&device, &mut data)?;
         core::pipeline::create_framebuffers(&device, &mut data)?;
 
         core::commands::create_command_pool(&instance, &device, &mut data)?;
-        core::vertex::create_vertex_buffer(&instance, &device, &mut data)?;
-        core::vertex::create_index_buffer(&instance, &device, &mut data)?;
+
+        core::buffer::create_vertex_buffer(&instance, &device, &mut data)?;
+        core::buffer::create_index_buffer(&instance, &device, &mut data)?;
         core::commands::create_command_buffers(&device, &mut data)?;
+
         core::commands::create_sync_objects(&device, &mut data)?;
 
         Ok(Self { entry,
