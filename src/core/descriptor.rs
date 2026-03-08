@@ -2,7 +2,6 @@ use anyhow::Result;
 use vulkanalia::prelude::v1_0::*;
 
 use crate::AppData;
-use crate::core;
 
 pub unsafe fn create_descriptor_set_layout(
     device: &Device,
@@ -13,6 +12,16 @@ pub unsafe fn create_descriptor_set_layout(
     .descriptor_type(vk::DescriptorType::UNIFORM_BUFFER)
     .descriptor_count(1)
     .stage_flags(vk::ShaderStageFlags::VERTEX);
+    
+    let bindings = &[ubo_binding];
+    let info = vk::DescriptorSetLayoutCreateInfo::builder()
+        .bindings(bindings);
+
+    data.descriptor_set_layout = device.create_descriptor_set_layout(&info, None)?;
+
+    let set_layouts = &[data.descriptor_set_layout];
+    let layout_info = vk::PipelineLayoutCreateInfo::builder()
+        .set_layouts(set_layouts);
 
     Ok(())
 }

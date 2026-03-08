@@ -136,7 +136,7 @@ pub unsafe fn recreate_swapchain(instance: &Instance, device: &Device, window: &
     core::pipeline::create_render_pass(&instance, &device, data)?;
     core::pipeline::create_pipeline(&device, data)?;
     core::pipeline::create_framebuffers(&device, data)?;
-
+    core::buffer::create_uniform_buffer(&instance, &device, data)?;
     core::commands::create_command_buffers(&device, data)?;
     data.images_in_flight.resize(data.swapchain_images.len(), vk::Fence::null());
     Ok(())
@@ -148,6 +148,8 @@ pub unsafe fn destroy_swapchain(device: &Device, data: &mut AppData){
 }
 
 unsafe fn cleanup_swapchain_resources(device: &Device, data: &mut AppData) {
+    data.uniform_buffers.iter().for_each(|b| device.destroy_buffer(*b, None));
+    data.uniform_buffers_memory.iter().for_each(|m| device.free_memory(*m, None));
     device.free_command_buffers(data.command_pool, &data.command_buffers);
     data.framebuffers.iter().for_each(|f| device.destroy_framebuffer(*f, None));
     device.destroy_pipeline(data.pipeline, None);

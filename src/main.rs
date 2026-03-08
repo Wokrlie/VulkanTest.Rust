@@ -99,6 +99,7 @@ pub struct AppData {
     pub swapchain_image_views: Vec<vk::ImageView>,
 
     pub render_pass: vk::RenderPass,
+    pub descriptor_set_layout: vk::DescriptorSetLayout,
     pub pipeline_layout: vk::PipelineLayout,
     pub pipeline: vk::Pipeline,
     pub framebuffers: Vec<vk::Framebuffer>,
@@ -110,6 +111,8 @@ pub struct AppData {
     pub command_buffers: Vec<vk::CommandBuffer>,
     pub index_buffer: vk::Buffer,
     pub index_buffer_memory: vk::DeviceMemory,
+    pub uniform_buffers: Vec<vk::Buffer>,
+    pub uniform_buffers_memory: Vec<vk::DeviceMemory>,
 
     pub image_available_semaphores: Vec<vk::Semaphore>,
     pub render_finished_semaphores: Vec<vk::Semaphore>,
@@ -140,7 +143,7 @@ impl App {
         core::swapchain::create_swapchain_image_views(&device, &mut data)?;
 
         core::pipeline::create_render_pass(&instance, &device, &mut data)?;
-        core::buffer::create_descriptor_set_layout(&device, &mut data)?;
+        core::descriptor::create_descriptor_set_layout(&device, &mut data)?;
         core::pipeline::create_pipeline(&device, &mut data)?;
         core::pipeline::create_framebuffers(&device, &mut data)?;
 
@@ -231,6 +234,7 @@ impl App {
         self.device.device_wait_idle().unwrap();
 
         core::swapchain::destroy_swapchain(&self.device, &mut self.data,);
+        self.device.destroy_descriptor_set_layout(self.data.descriptor_set_layout, None);
 
         self.data.in_flight_fences.iter().for_each(|f| self.device.destroy_fence(*f, None));
         self.data.render_finished_semaphores.iter().for_each(|s| self.device.destroy_semaphore(*s, None));
